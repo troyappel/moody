@@ -6,6 +6,8 @@ import gym
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 
+import numpy as np
+
 import configparser
 
 from . import GenericInterface
@@ -18,7 +20,7 @@ class SpotifyInterface(GenericInterface):
         self.config = config
         self.callback_interval = callback_interval
         self.sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
-            scope=scope,
+            scope=self.scope,
             client_id=config['SPOTIFY']['CLIENT_ID'],
             client_secret=config['SPOTIFY']['CLIENT_SECRET'],
             redirect_uri=config['SPOTIFY']['REDIRECT_URI'],
@@ -37,10 +39,34 @@ class SpotifyInterface(GenericInterface):
         return self.get_space()
 
     def get_observation(self) -> Tuple:
-        pass
+        cur = self.get_cur_song()
 
-    def action_callback(self) -> Callable:
-        pass
+        trackinfo = self.sp.track(cur['id'])
+
+        attrs = np.array([
+            float(trackinfo['acousticness']),
+            float(trackinfo['danceability']),
+            float(trackinfo['energy']),
+            float(trackinfo['instrumentalness']),
+            float(trackinfo['liveness']),
+            float(trackinfo['loudness']),
+            float(trackinfo['speechiness']),
+            float(trackinfo['valence']),
+            float(trackinfo['tempo']),
+        ])
+
+        mode = np.array([trackinfo['mode']])
+
+        return (attrs, mode)
+
+
+    def action_callback(self, action) -> Callable:
+        if not self.new_song_needed():
+            return
+
+        attrs, mode = action
+
+        self.play_similar(list(attrs), mode.item(0))
 
 
     # Custom functions
