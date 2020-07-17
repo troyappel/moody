@@ -1,0 +1,15 @@
+[SPOTIFY]
+client_id = c777074dc51145c49f2505a7107ad587
+client_secret = c63a4705fc214493b8e7677bd38ebc99
+redirect_uri = http://example.com
+username = troytrev
+
+[SeedGenres]
+
+[SeedArtists]
+glass animals = 4yvcSjfu4PC0CYQyLy4wSq
+gorillaz = 3AA28KZvwAUcZuOKwyblJQ
+
+[SeedTracks]
+the moss = 3qEg6xYffvuvwpq4U6FRrK
+
