@@ -39,9 +39,11 @@ class SpotifyInterface(GenericInterface):
         return self.get_space()
 
     def get_observation(self) -> Tuple:
-        cur = self.get_cur_song()
+        cur = self.sp.current_playback()
 
-        trackinfo = self.sp.track(cur['id'])
+        volume = cur['device']['volume_percent']
+
+        trackinfo = self.sp.track(cur['item']['id'])
 
         attrs = np.array([
             float(trackinfo['acousticness']),
@@ -53,6 +55,7 @@ class SpotifyInterface(GenericInterface):
             float(trackinfo['speechiness']),
             float(trackinfo['valence']),
             float(trackinfo['tempo']),
+            volume
         ])
 
         mode = np.array([trackinfo['mode']])
@@ -72,7 +75,7 @@ class SpotifyInterface(GenericInterface):
     # Custom functions
 
     def get_space(self):
-        attrs = gym.spaces.Box(low=[0, 0, 0, 0, 0, 0, 0, 0], high=[1, 1, 1, 1, 1, 1, 1, 255])
+        attrs = gym.spaces.Box(low=[0, 0, 0, 0, 0, 0, 0, 0, 50], high=[1, 1, 1, 1, 1, 1, 1, 255, 100])
         mode = gym.spaces.Discrete(2)
 
         return gym.spaces.Tuple([attrs, mode])
@@ -154,9 +157,6 @@ class SpotifyInterface(GenericInterface):
                 break
         else:
             raise Exception()
-
-    def get_cur_song(self):
-        return self.sp.current_playback()['item']
 
     def new_song_needed(self):
         playback = self.sp.current_playback()
