@@ -2,11 +2,29 @@ from typing import Callable, Tuple
 import gym
 from abc import ABC, abstractmethod
 
+from interface import Averages
+
 
 class GenericModel(ABC):
 
-    # List of fields and their spaces
-    # 'None' if not listed
+    def __init__(self, **kwargs):
+        for key, val in kwargs:
+            if key not in self.fields.keys():
+                raise AttributeError(key)
+
+        self.smoothers = {}
+
+        # Set
+        default_smoother: Averages.Smoother
+        for field, (default_smoother, space) in self.fields:
+            if field in kwargs.keys():
+                self.smoothers[field] = kwargs[field]
+            elif default_smoother is not None:
+                self.smoothers[field] = default_smoother
+            else:
+                self.smoothers[field] = Averages.METHODS.PASS
+
+    # Dictionary of field: (default_smoother, space)
     @abstractmethod
     @property
     def fields(self):
@@ -28,8 +46,5 @@ class GenericModel(ABC):
         return tuple(final_repr)
 
     def get_unique_name(self):
-        space_list = [k for k, v in self.fields if v is not None]
-        return "_".join
-
-
-
+        field_list = ["(" + k + ", " + v + ")" for k, v in self.smoothers if v is not None]
+        return str(self.__class__) + "-" + "_".join(field_list)

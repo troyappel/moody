@@ -2,6 +2,7 @@
 
 import math
 from enum import Enum, auto
+import json
 
 class METHODS(Enum):
     MAX = auto()
@@ -10,6 +11,7 @@ class METHODS(Enum):
     MS = auto()
     EXP = auto()
     CUST = auto()
+    PASS = auto()
 
 
 # Upon instantiation, can specify how to take averages of different fields
@@ -55,5 +57,10 @@ class Smoother(object):
             return first
         elif self.method == METHODS.CUST:
             return self.function(data)
+        elif self.method == METHODS.PASS:
+            return data
         else:
             raise Exception("Unsupported smoothing function.")
+
+    def __str__(self):
+        return self.method.name + "_" + json.dumps(self.kwargs)
