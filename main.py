@@ -1,24 +1,23 @@
 from apscheduler.schedulers.blocking import BlockingScheduler
-import spotify_hooks as sp_hooks
+from interface import SpotifyInterface
+import configparser
 
 INTERVAL=30
 
+
+config = configparser.ConfigParser()
+config.read()
 scheduler = BlockingScheduler()
 
-# SETUP
-sp.init()
 
-
+# Interfaces
 
 # LOOP
-
 iterations = 0
-
 def loop_event():
     global iterations
-
-    if(sp_hooks)
-
     iterations += 1
+
+
 
 job = scheduler.add_job(loop_event, 'interval', seconds=INTERVAL)

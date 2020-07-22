@@ -36,14 +36,7 @@ class SpotifyInterface(GenericInterface):
 
         super(SpotifyInterface, self).__init__(config, callback_interval, SpotifyModel(**kwargs))
 
-
-    def input_space(self) -> gym.spaces.space:
-        return self.get_space()
-
-    def output_space(self) -> gym.spaces.space:
-        return self.get_space()
-
-    def get_observation(self) -> Tuple:
+    def get_interval_data(self) -> Tuple:
         cur = self.sp.current_playback()
 
         volume = cur['device']['volume_percent']
