@@ -9,14 +9,14 @@ class GenericModel(ABC):
 
     def __init__(self, **kwargs):
         for key, val in kwargs:
-            if key not in self.fields.keys():
+            if key not in self.input_fields.keys():
                 raise AttributeError(key)
 
         self.smoothers = {}
 
-        # Set
+        # Type hint
         default_smoother: Averages.Smoother
-        for field, (default_smoother, space) in self.fields:
+        for field, (default_smoother, space) in self.input_fields:
             if field in kwargs.keys():
                 self.smoothers[field] = kwargs[field]
             elif default_smoother is not None:
@@ -27,7 +27,13 @@ class GenericModel(ABC):
     # Dictionary of field: (default_smoother, space)
     @abstractmethod
     @property
-    def fields(self):
+    def input_fields(self):
+        raise NotImplementedError
+
+    # Dictionary of field: space
+    @abstractmethod
+    @property
+    def output_fields(self):
         raise NotImplementedError
 
     def space(self) -> gym.spaces.space:

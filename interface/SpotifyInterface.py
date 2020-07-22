@@ -12,11 +12,14 @@ import configparser
 
 from . import GenericInterface
 
+from models.SpotifyModel import SpotifyModel
+
+
 class SpotifyInterface(GenericInterface):
 
     scope = "user-read-currently-playing user-read-playback-state streaming"
 
-    def __init__(self, config, callback_interval):
+    def __init__(self, config, callback_interval, **kwargs):
         self.config = config
         self.callback_interval = callback_interval
         self.sp = spotipy.Spotify(auth_manager=SpotifyOAuth(
@@ -30,6 +33,8 @@ class SpotifyInterface(GenericInterface):
         self.uri_set = set()
 
         self.config_ids()
+
+        super(SpotifyInterface, self).__init__(config, callback_interval, SpotifyModel(**kwargs))
 
 
     def input_space(self) -> gym.spaces.space:
@@ -73,13 +78,6 @@ class SpotifyInterface(GenericInterface):
 
 
     # Custom functions
-
-    def get_space(self):
-        attrs = gym.spaces.Box(low=[0, 0, 0, 0, 0, 0, 0, 0, 50], high=[1, 1, 1, 1, 1, 1, 1, 255, 100])
-        mode = gym.spaces.Discrete(2)
-
-        return gym.spaces.Tuple([attrs, mode])
-
     def config_ids(self):
         artists = self.config['SeedArtists'].keys()
         tracks = self.config['SeedTracks'].keys()

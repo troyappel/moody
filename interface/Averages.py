@@ -58,6 +58,8 @@ class Smoother(object):
         elif self.method == METHODS.CUST:
             return self.function(data)
         elif self.method == METHODS.PASS:
+            if isinstance(data, list):
+                raise Exception("Cannot pass-through a non-singleton value")
             return data
         else:
             raise Exception("Unsupported smoothing function.")
