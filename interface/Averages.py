@@ -39,11 +39,13 @@ class Smoother(object):
         self.function = None
         self.alpha = None
 
+        self.prev_val = 0
+
         for k, v in kwargs.items():
             setattr(self, k, v)
 
     # Data should be python list
-    def evaluate(self, data, prev_val):
+    def evaluate(self, data):
         if self.method == METHODS.MAX:
             return max(data)
         elif self.method == METHODS.MIN:
@@ -53,7 +55,7 @@ class Smoother(object):
         elif self.method == METHODS.MS:
             return sum([x**2 for x in data])
         elif self.method == METHODS.EXP:
-            first = prev_val
+            first = self.prev_val
             for datum in data:
                 first = datum * self.alpha + (1 - self.alpha) * first
             return first

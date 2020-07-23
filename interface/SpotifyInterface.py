@@ -36,12 +36,12 @@ class SpotifyInterface(GenericInterface):
 
         super(SpotifyInterface, self).__init__(config, callback_interval, SpotifyModel(**kwargs))
 
-    def get_interval_data(self) -> Tuple:
+    def get_interval_data(self) -> dict:
         cur = self.sp.current_playback()
 
         volume = cur['device']['volume_percent']
 
-        trackinfo = self.sp.track(cur['item']['id'])
+        trackinfo = self.sp.audio_features(cur['item']['id'])[0]
 
         attrs = np.array([
             float(trackinfo['acousticness']),
@@ -58,7 +58,10 @@ class SpotifyInterface(GenericInterface):
 
         mode = np.array([trackinfo['mode']])
 
-        return (attrs, mode)
+        return {
+            'attributes': attrs,
+            'mode': mode
+        }
 
 
     def action_callback(self, action) -> Callable:

@@ -13,32 +13,35 @@ class GenericInterface(ABC):
         self.callback_interval = callback_interval
         self.model = model
 
+        self.prev_vals = {}
+
     # Dict of {field: iterable or singleton}
     @abstractmethod
-    def get_interval_data(self) -> Tuple:
+    def get_interval_data(self) -> dict:
         pass
 
+    # Tuple of values, in key-sorted order
     def get_observation(self) -> Tuple:
         data = self.get_interval_data()
 
         res_list = []
 
-        for k, v in data:
-            averages = np.apply_along_axis(self.model.smoothers[k], 0, v)
+        for k in sorted(data):
+            v = data[k]
 
-            assert self.model.input_fields[k][0].contains(averages)
+            averages = np.apply_along_axis(self.model.smoothers[k].evaluate, 0, v)
+
+            assert self.model.input_fields[k][1].contains(averages)
 
             res_list.append(averages)
 
         return tuple(res_list)
-
-
 
     @abstractmethod
     def clear_observation(self) -> None:
         pass
 
     @abstractmethod
-    def action_callback(self) -> Callable:
+    def action_callback(self, action) -> Callable:
         pass
 

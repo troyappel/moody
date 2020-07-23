@@ -26,3 +26,6 @@ def loop_event():
 
 
 job = scheduler.add_job(loop_event, 'interval', seconds=INTERVAL)
+
+loop_event()
+scheduler.start()
