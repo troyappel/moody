@@ -2,12 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="49effbe7-ffc1-49eb-9b33-045657a9a6b4" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.cache-troytrev" beforeDir="false" afterPath="$PROJECT_DIR$/.cache-troytrev" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/interface/Averages.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/Averages.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/interface/GenericInterface.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/GenericInterface.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/interface/SpotifyInterface.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/SpotifyInterface.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/SpotifyModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/SpotifyModel.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/openant" beforeDir="false" afterPath="$PROJECT_DIR$/openant" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/openant/examples/scan.py" beforeDir="false" afterPath="$PROJECT_DIR$/openant/examples/scan.py" afterDir="false" />
@@ -216,28 +213,13 @@
           <option name="timeStamp" value="5" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/models/GenericModel.py</url>
-          <line>18</line>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/models/GenericModel.py</url>
-          <line>19</line>
-          <option name="timeStamp" value="7" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/interface/SpotifyInterface.py</url>
           <line>45</line>
           <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/interface/SpotifyInterface.py</url>
-          <line>41</line>
-          <option name="timeStamp" value="9" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/interface/GenericInterface.py</url>
-          <line>33</line>
+          <line>36</line>
           <option name="timeStamp" value="10" />
         </line-breakpoint>
       </breakpoints>

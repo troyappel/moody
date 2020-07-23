@@ -31,6 +31,9 @@ class GenericInterface(ABC):
 
             averages = np.apply_along_axis(self.model.smoothers[k].evaluate, 0, v)
 
+            if len(averages) == 1:
+                averages = averages[0]
+
             assert self.model.input_fields[k][1].contains(averages)
 
             res_list.append(averages)

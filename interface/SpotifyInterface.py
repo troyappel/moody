@@ -70,7 +70,7 @@ class SpotifyInterface(GenericInterface):
 
         attrs, mode = action
 
-        self.play_similar(list(attrs), mode.item(0))
+        self.play_similar(list(attrs), mode)
 
     def clear_observation(self):
         return
@@ -124,12 +124,12 @@ class SpotifyInterface(GenericInterface):
         if not self.sp.currently_playing()['is_playing']:
             self.sp.start_playback()
 
-        self.p.add_to_queue(uri)
+        self.sp.add_to_queue(uri)
 
         if now:
             self.seek_song(uri)
 
-    def play_similar(self, target_attrs, tempo, mode, now=True):
+    def play_similar(self, target_attrs, mode, now=True):
         recs = self.sp.recommendations(
             seed_artists=self.config['SeedArtists'].values(),
             seed_genres=self.config['SeedArtists'].keys(),
@@ -141,7 +141,7 @@ class SpotifyInterface(GenericInterface):
             target_loudness=target_attrs[4],
             target_speechiness=target_attrs[5],
             target_valence=target_attrs[6],
-            target_tempo=tempo,
+            target_tempo=target_attrs[7],
             target_mode=mode
         )
 
@@ -160,4 +160,4 @@ class SpotifyInterface(GenericInterface):
 
         to_end = playback['item']['duration_ms'] - playback['progress_ms']
 
-        return to_end * 1000 > self.INTERVAL
+        return to_end * 1000 > self.callback_interval
