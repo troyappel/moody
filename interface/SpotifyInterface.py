@@ -10,7 +10,7 @@ import numpy as np
 
 import configparser
 
-from . import GenericInterface
+from interface.GenericInterface import GenericInterface
 
 from models.SpotifyModel import SpotifyModel
 
@@ -68,6 +68,9 @@ class SpotifyInterface(GenericInterface):
         attrs, mode = action
 
         self.play_similar(list(attrs), mode.item(0))
+
+    def clear_observation(self):
+        return
 
 
     # Custom functions

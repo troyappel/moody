@@ -16,7 +16,8 @@ class GenericModel(ABC):
 
         # Type hint
         default_smoother: Averages.Smoother
-        for field, (default_smoother, space) in self.input_fields:
+        for field, tup in self.input_fields.items():
+            default_smoother, space = tup
             if field in kwargs.keys():
                 self.smoothers[field] = kwargs[field]
             elif default_smoother is not None:
@@ -25,14 +26,14 @@ class GenericModel(ABC):
                 self.smoothers[field] = Averages.METHODS.PASS
 
     # Dictionary of field: (default_smoother, space)
-    @abstractmethod
     @property
+    @abstractmethod
     def input_fields(self):
         raise NotImplementedError
 
     # Dictionary of field: space
-    @abstractmethod
     @property
+    @abstractmethod
     def output_fields(self):
         raise NotImplementedError
 

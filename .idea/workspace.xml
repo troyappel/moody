@@ -3,9 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="49effbe7-ffc1-49eb-9b33-045657a9a6b4" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.txt" beforeDir="false" afterPath="$PROJECT_DIR$/config.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interface/Averages.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/Averages.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/interface/SpotifyInterface.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/SpotifyInterface.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/GenericModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/GenericModel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/SpotifyModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/SpotifyModel.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/openant" beforeDir="false" afterPath="$PROJECT_DIR$/openant" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/openant/examples/scan.py" beforeDir="false" afterPath="$PROJECT_DIR$/openant/examples/scan.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/openant/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/openant/setup.py" afterDir="false" />
@@ -57,7 +59,28 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.observation">
+  <component name="RunManager" selected="Python.main">
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="keyplayer" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="namedpipetest" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="keyplayer" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -144,6 +167,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.main" />
         <item itemvalue="Python.observation" />
         <item itemvalue="Python.sensors" />
         <item itemvalue="Python.namedpipetest" />
@@ -184,6 +208,21 @@
           <url>file://$PROJECT_DIR$/spotify_hooks.py</url>
           <line>77</line>
           <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/interface/Averages.py</url>
+          <line>33</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/models/GenericModel.py</url>
+          <line>18</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/models/GenericModel.py</url>
+          <line>19</line>
+          <option name="timeStamp" value="7" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

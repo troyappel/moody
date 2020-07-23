@@ -31,7 +31,9 @@ class Smoother(object):
         self.kwargs = kwargs
 
         # Check if required kwargs are here
-        if self.mandatory_kwargs[method] and not set(self.mandatory_kwargs[method]) == set(kwargs.keys()):
+        if method in self.mandatory_kwargs.keys() \
+            and self.mandatory_kwargs[method] \
+            and not set(self.mandatory_kwargs[method]) == set(kwargs.keys()):
             raise Exception("Invalid kwargs: use " + ", ".join(self.mandatory_kwargs[method]))
 
         self.function = None

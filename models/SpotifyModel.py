@@ -1,6 +1,7 @@
 from .GenericModel import GenericModel
 import gym
 from interface import Averages
+import numpy as np
 
 
 class SpotifyModel(GenericModel):
@@ -10,7 +11,8 @@ class SpotifyModel(GenericModel):
     input_fields = {
         "attributes": (
             Averages.Smoother(Averages.METHODS.PASS),
-            gym.spaces.Box(low=[0, 0, 0, 0, 0, 0, 0, 0, 50], high=[1, 1, 1, 1, 1, 1, 1, 255, 100])
+            gym.spaces.Box(low=np.array([0, 0, 0, 0, 0, 0, 0, 0, 50], dtype=np.float16), high=np.array([1, 1, 1, 1, 1, 1, 1, 255, 100], dtype=np.float16),
+                           dtype=np.float16)
         ),
         "mode": (
             Averages.Smoother(Averages.METHODS.PASS),
@@ -20,7 +22,8 @@ class SpotifyModel(GenericModel):
 
     output_fields = {
         "attributes":
-            gym.spaces.Box(low=[0, 0, 0, 0, 0, 0, 0, 0, 50], high=[1, 1, 1, 1, 1, 1, 1, 255, 100]),
+            gym.spaces.Box(low=np.array([0, 0, 0, 0, 0, 0, 0, 0, 50], dtype=np.float16), high=np.array([1, 1, 1, 1, 1, 1, 1, 255, 100], dtype=np.float16),
+                           dtype=np.float16),
         "mode":
             gym.spaces.Discrete(2)
     }
