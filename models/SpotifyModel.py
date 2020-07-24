@@ -11,7 +11,8 @@ class SpotifyModel(GenericModel):
     input_fields = {
         "attributes": (
             Averages.Smoother(Averages.METHODS.PASS),
-            gym.spaces.Box(low=np.array([0, 0, 0, 0, 0, -60, 0, 0, 0, 0], dtype=np.float16), high=np.array([1, 1, 1, 1, 1, 0, 1, 1, 255, 100], dtype=np.float16),
+            gym.spaces.Box(low=np.array([0, 0, 0, 0, 0, -60, 0, 0, 0, 0], dtype=np.float16),
+                           high=np.array([1, 1, 1, 1, 1, 0, 1, 1, 255, 100], dtype=np.float16),
                            dtype=np.float16)
         ),
         "mode": (
@@ -22,7 +23,8 @@ class SpotifyModel(GenericModel):
 
     output_fields = {
         "attributes":
-            gym.spaces.Box(low=np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 50], dtype=np.float16), high=np.array([1, 1, 1, 1, 1, 1, 1, 1, 255, 100], dtype=np.float16),
+            gym.spaces.Box(low=np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 50], dtype=np.float16),
+                           high=np.array([1, 1, 1, 1, 1, 1, 1, 1, 255, 100], dtype=np.float16),
                            dtype=np.float16),
         "mode":
             gym.spaces.Discrete(2)

@@ -2,10 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="49effbe7-ffc1-49eb-9b33-045657a9a6b4" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/interface/SoundDeviceInterface.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/models/SoundDeviceModel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.cache-troytrev" beforeDir="false" afterPath="$PROJECT_DIR$/.cache-troytrev" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/interface/GenericInterface.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/GenericInterface.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/interface/SpotifyInterface.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/SpotifyInterface.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/SpotifyModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/SpotifyModel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/observation.py" beforeDir="false" afterPath="$PROJECT_DIR$/observation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/openant" beforeDir="false" afterPath="$PROJECT_DIR$/openant" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/openant/examples/scan.py" beforeDir="false" afterPath="$PROJECT_DIR$/openant/examples/scan.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/openant/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/openant/setup.py" afterDir="false" />
@@ -214,7 +219,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/interface/SpotifyInterface.py</url>
-          <line>45</line>
+          <line>48</line>
           <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">

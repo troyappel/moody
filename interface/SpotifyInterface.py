@@ -34,6 +34,9 @@ class SpotifyInterface(GenericInterface):
 
         self.config_ids()
 
+        if not self.sp.currently_playing()['is_playing']:
+            self.sp.start_playback()
+
         super(SpotifyInterface, self).__init__(config, callback_interval, SpotifyModel(**kwargs))
 
     def get_interval_data(self) -> dict:
@@ -75,6 +78,8 @@ class SpotifyInterface(GenericInterface):
     def clear_observation(self):
         return
 
+    def reward(self):
+        return 0
 
     # Custom functions
     def config_ids(self):

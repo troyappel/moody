@@ -40,6 +40,9 @@ class GenericInterface(ABC):
 
         return tuple(res_list)
 
+    # Order of calls:
+    # get_interval_data -> action_callback -> reward -> clear_observation
+
     @abstractmethod
     def clear_observation(self) -> None:
         pass
@@ -48,3 +51,6 @@ class GenericInterface(ABC):
     def action_callback(self, action) -> Callable:
         pass
 
+    @abstractmethod
+    def reward(self) -> float:
+        pass
