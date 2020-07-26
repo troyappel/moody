@@ -14,28 +14,28 @@ class SoundDeviceInterface(GenericInterface):
 
     def __init__(self, config, callback_interval, **kwargs):
 
-        self.sound_lst = []
+        self.sound_lst = [0]
 
-        f = sd.Stream(callback=self.inc_sound)
-
-        f.start()
+        # f = sd.Stream(callback=self.inc_sound)
+        #
+        # f.start()
 
         super(SoundDeviceInterface, self).__init__(config, callback_interval, SoundDeviceModel(**kwargs))
 
     # Dict of {field: iterable or singleton}
     def get_interval_data(self) -> dict:
         return {
-            "ambientNoise": np.ndarray(self.sound_lst)
+            "ambientNoise": np.ndarray([1])
         }
 
     def clear_observation(self) -> None:
-        self.sound_lst = []
+        self.sound_lst = [0]
 
-    def action_callback(self, action) -> Callable:
-        pass
+    def action_callback(self, action):
+        return
 
     def reward(self) -> float:
-        pass
+        return 0
 
     # Internal
     def inc_sound(self, indata, outdata, frames, time, status):

@@ -20,7 +20,7 @@ my_config.read('config.txt')
 
 interfaces = [
     SpotifyInterface(my_config, INTERVAL),
-    # SoundDeviceInterface(my_config, INTERVAL)
+    SoundDeviceInterface(my_config, INTERVAL)
 ]
 
 flatten = lambda l: [item for sublist in l for item in sublist]
@@ -72,7 +72,6 @@ class MoodyEnvLoop(ExternalEnv):
 
                 time.sleep(INTERVAL)
 
-                # self.stepcount += 1
 
 ray.init()
 
@@ -81,9 +80,9 @@ config = ppo.DEFAULT_CONFIG.copy()
 register_env("moody", lambda _: MoodyEnvLoop(interfaces))
 
 config = ppo.DEFAULT_CONFIG.copy()
-# config["num_gpus"] = 0
-# config["num_workers"] = 1
-# config["eager"] = False
+config["num_gpus"] = 0
+config["num_workers"] = 1
+config["eager"] = False
 trainer = ppo.PPOTrainer(config=config, env="moody")
 
 print("here")

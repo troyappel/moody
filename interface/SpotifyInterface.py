@@ -64,7 +64,7 @@ class SpotifyInterface(GenericInterface):
             volume
         ])
 
-        mode = np.array([trackinfo['mode']])
+        mode = trackinfo['mode']
 
         return {
             'attributes': attrs,

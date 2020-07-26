@@ -31,8 +31,21 @@ class GenericInterface(ABC):
 
             averages = np.apply_along_axis(self.model.smoothers[k].evaluate, 0, v)
 
-            if len(averages) == 1:
-                averages = averages[0]
+            print(averages)
+
+
+            # Array might be 0-dimensional -- gym space expects an array or list for Box
+            if isinstance(averages, np.ndarray):
+                if isinstance(self.model.input_fields[k][1], gym.spaces.Box):
+                    if averages.size == 1:
+                        averages = averages.reshape(1)
+
+            # if isinstance(averages, float):
+            #     averages = [float(averages)]
+
+            print(averages)
+            print(self.model.input_fields[k][1])
+            print(type(averages))
 
             assert self.model.input_fields[k][1].contains(averages)
 
