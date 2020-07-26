@@ -42,16 +42,16 @@ class GenericModel(ABC):
             v[1] for k, v in self.input_fields.items()
             if self.smoothers[k] is not None
         ]
-        return gym.spaces.Tuple(space_list)
+        return space_list
 
     def output_space(self) -> gym.spaces.space:
         space_list = [v for _, v in self.output_fields.items() if v is not None]
-        return gym.spaces.Tuple(space_list)
+        return space_list
 
     # Data is shaped like maximal version of fields
     def get_repr(self, data):
         final_repr = []
-        for i, (_, v) in enumerate(self.fields):
+        for i, (_, v) in enumerate(self.input_fields):
             if v is None:
                 continue
 

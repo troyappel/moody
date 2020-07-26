@@ -20,8 +20,10 @@ my_config.read('config.txt')
 
 interfaces = [
     SpotifyInterface(my_config, INTERVAL),
-#     SoundDeviceInterface(my_config, INTERVAL)
+    # SoundDeviceInterface(my_config, INTERVAL)
 ]
+
+flatten = lambda l: [item for sublist in l for item in sublist]
 
 class MoodyEnvLoop(ExternalEnv):
     def __init__(self, interfaces):
@@ -30,8 +32,9 @@ class MoodyEnvLoop(ExternalEnv):
         self.interfaces: list [GenericInterface]
         self.interfaces = sorted(interfaces, key=lambda x: type(x).__name__)
 
-        observation_space = gym.spaces.Tuple([interface.model.input_space() for interface in self.interfaces])
-        action_space = gym.spaces.Tuple([interface.model.output_space() for interface in self.interfaces])
+
+        observation_space = gym.spaces.Tuple(flatten([interface.model.input_space() for interface in self.interfaces]))
+        action_space = gym.spaces.Tuple(flatten([interface.model.output_space() for interface in self.interfaces]))
 
 
         print("making env")
@@ -47,14 +50,25 @@ class MoodyEnvLoop(ExternalEnv):
 
                 for el in self.interfaces:
                     self.log_returns(eid, el.reward())
-                obs = tuple([el.get_observation() for el in self.interfaces])
+
+                obs = flatten([el.get_observation() for el in self.interfaces])
+
+                print(obs)
+                print(self.observation_space.sample())
 
                 actions = self.get_action(eid, obs)
 
+                print(actions)
+                print(self.action_space.sample())
+
+                action_list = list(actions)
+
                 for i in range(0, len(interfaces)):
                     el = self.interfaces[i]
-                    action = actions[i]
+                    action = action_list[0:len(el.model.output_space())]
                     el.action_callback(action)
+
+                    action_list = action_list[len(el.model.output_space()):]
 
                 time.sleep(INTERVAL)
 
