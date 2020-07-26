@@ -37,8 +37,15 @@ class GenericModel(ABC):
     def output_fields(self):
         raise NotImplementedError
 
-    def space(self) -> gym.spaces.space:
-        space_list = [v for _, v in self.fields if v is not None]
+    def input_space(self) -> gym.spaces.space:
+        space_list = [
+            v[1] for k, v in self.input_fields.items()
+            if self.smoothers[k] is not None
+        ]
+        return gym.spaces.Tuple(space_list)
+
+    def output_space(self) -> gym.spaces.space:
+        space_list = [v for _, v in self.output_fields.items() if v is not None]
         return gym.spaces.Tuple(space_list)
 
     # Data is shaped like maximal version of fields

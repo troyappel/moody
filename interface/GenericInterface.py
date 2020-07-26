@@ -48,7 +48,7 @@ class GenericInterface(ABC):
         pass
 
     @abstractmethod
-    def action_callback(self, action) -> Callable:
+    def action_callback(self, action) -> None:
         pass
 
     @abstractmethod

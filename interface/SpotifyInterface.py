@@ -34,13 +34,18 @@ class SpotifyInterface(GenericInterface):
 
         self.config_ids()
 
-        if not self.sp.currently_playing()['is_playing']:
-            self.sp.start_playback()
-
         super(SpotifyInterface, self).__init__(config, callback_interval, SpotifyModel(**kwargs))
 
     def get_interval_data(self) -> dict:
         cur = self.sp.current_playback()
+
+        while cur is None:
+            time.sleep(3)
+            try:
+                self.sp.start_playback()
+                cur = self.sp.current_playback()
+            except spotipy.SpotifyException:
+                continue
 
         volume = cur['device']['volume_percent']
 
@@ -67,13 +72,22 @@ class SpotifyInterface(GenericInterface):
         }
 
 
-    def action_callback(self, action) -> Callable:
+    def action_callback(self, action) -> None:
+
+        cur = self.sp.currently_playing()
+
+        play_now = False
+
+        if not cur or not cur['is_playing']:
+            self.sp.start_playback()
+            play_now = True
+
         if not self.new_song_needed():
             return
 
         attrs, mode = action
 
-        self.play_similar(list(attrs), mode)
+        self.play_similar(list(attrs), mode, play_now)
 
     def clear_observation(self):
         return
