@@ -20,6 +20,9 @@ class GenericInterface(ABC):
     def get_interval_data(self) -> dict:
         pass
 
+    def init_in_task(self) -> None:
+        return
+
     # Tuple of values, in key-sorted order
     def get_observation(self) -> Tuple:
         data = self.get_interval_data()
@@ -57,9 +60,13 @@ class GenericInterface(ABC):
 
             print(self.model.input_fields[k][1].contains(averages))
 
+            print("data!")
+
             assert self.model.input_fields[k][1].contains(averages)
 
             res_list.append(averages)
+
+        print("returning!")
 
         return tuple(res_list)
 

@@ -12,20 +12,19 @@ from .GenericInterface import GenericInterface
 from models.SoundDeviceModel import SoundDeviceModel
 
 
-def inc_sound(self, indata, outdata, frames, time, status):
-    print("yes!")
-
 class SoundDeviceInterface(GenericInterface):
 
     def __init__(self, config, callback_interval, **kwargs):
 
         self.sound_lst = [0]
 
-        f = sd.Stream(callback=self.inc_sound)
-
-        f.start()
+        self.stream = None
 
         super(SoundDeviceInterface, self).__init__(config, callback_interval, SoundDeviceModel(**kwargs))
+
+    def init_in_task(self):
+        self.stream = sd.Stream(callback=self.inc_sound)
+        self.stream.start()
 
     # Dict of {field: iterable or singleton}
     def get_interval_data(self) -> dict:

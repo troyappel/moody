@@ -58,13 +58,19 @@ class MoodyEnvLoop(ExternalEnv):
 
     def run(self):
         print("running")
+        for interface in self.interfaces:
+            ray.get(interface.init_in_task.remote())
         while True:
             eid = self.start_episode()
             for j in range(0, EPISODE_LEN):
                 self.interfaces: list[GenericInterface]
 
+                print("returns")
+
                 for el in self.interfaces:
                     self.log_returns(eid, ray.get(el.reward.remote()))
+
+                print("obs")
 
                 obs = flatten([ray.get(el.get_observation.remote()) for el in self.interfaces])
 
@@ -77,6 +83,8 @@ class MoodyEnvLoop(ExternalEnv):
                 print(self.action_space.sample())
 
                 action_list = list(actions)
+
+                print("act")
 
                 for i in range(0, len(interfaces)):
 
