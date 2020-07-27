@@ -50,9 +50,12 @@ class GenericInterface(ABC):
             # if isinstance(averages, float):
             #     averages = [float(averages)]
 
+            print(data)
             print(averages)
             print(self.model.input_fields[k][1])
             print(type(averages))
+
+            print(self.model.input_fields[k][1].contains(averages))
 
             assert self.model.input_fields[k][1].contains(averages)
 

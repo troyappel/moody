@@ -53,7 +53,7 @@ class Smoother(object):
         elif self.method == METHODS.MEAN:
             return sum(data) / len(data)
         elif self.method == METHODS.MS:
-            return sum([x**2 for x in data])
+            return sum([x**2 for x in data])/len(data)
         elif self.method == METHODS.EXP:
             first = self.prev_val
             for datum in data:

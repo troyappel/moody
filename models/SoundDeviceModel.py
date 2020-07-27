@@ -10,7 +10,7 @@ class SoundDeviceModel(GenericModel):
 
     input_fields = {
         "ambientNoise": (
-            Averages.Smoother(Averages.METHODS.MS),
+            Averages.Smoother(Averages.METHODS.MEAN),
             gym.spaces.Box(low=np.array([0], dtype=np.float16),
                            high=np.array([255], dtype=np.float16),
                            dtype=np.float16)

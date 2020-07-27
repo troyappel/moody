@@ -21,7 +21,7 @@ class SoundDeviceInterface(GenericInterface):
 
         self.sound_lst = [0]
 
-        f = sd.Stream()
+        f = sd.Stream(callback=self.inc_sound)
 
         f.start()
 
@@ -30,7 +30,7 @@ class SoundDeviceInterface(GenericInterface):
     # Dict of {field: iterable or singleton}
     def get_interval_data(self) -> dict:
         return {
-            "ambientNoise": np.ndarray([1])
+            "ambientNoise": np.array(self.sound_lst, dtype=np.float16)
         }
 
     def clear_observation(self) -> None:
@@ -44,7 +44,6 @@ class SoundDeviceInterface(GenericInterface):
 
     # Internal
     def inc_sound(self, indata, outdata, frames, time, status):
-        print("debug")
         volume_norm = np.linalg.norm(indata) * 10
         self.sound_lst.append(volume_norm)
 
