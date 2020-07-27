@@ -6,9 +6,14 @@ from .Averages import Smoother, METHODS
 import numpy as np
 import sounddevice as sd
 
+import ray
+
 from .GenericInterface import GenericInterface
 from models.SoundDeviceModel import SoundDeviceModel
 
+
+def inc_sound(self, indata, outdata, frames, time, status):
+    print("yes!")
 
 class SoundDeviceInterface(GenericInterface):
 
@@ -16,9 +21,9 @@ class SoundDeviceInterface(GenericInterface):
 
         self.sound_lst = [0]
 
-        # f = sd.Stream(callback=self.inc_sound)
-        #
-        # f.start()
+        f = sd.Stream()
+
+        f.start()
 
         super(SoundDeviceInterface, self).__init__(config, callback_interval, SoundDeviceModel(**kwargs))
 
@@ -39,5 +44,8 @@ class SoundDeviceInterface(GenericInterface):
 
     # Internal
     def inc_sound(self, indata, outdata, frames, time, status):
+        print("debug")
         volume_norm = np.linalg.norm(indata) * 10
         self.sound_lst.append(volume_norm)
+
+

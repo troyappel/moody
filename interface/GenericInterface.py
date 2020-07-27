@@ -29,7 +29,14 @@ class GenericInterface(ABC):
         for k in sorted(data):
             v = data[k]
 
-            averages = np.apply_along_axis(self.model.smoothers[k].evaluate, 0, v)
+            averages = None
+
+            if isinstance(v, np.ndarray) and v.ndim > 0:
+                averages = np.apply_along_axis(self.model.smoothers[k].evaluate, 0, v)
+            elif isinstance(v, np.ndarray) and v.ndim == 0:
+                averages = self.model.smoothers[k].evaluate(v)
+            else:
+                averages = v
 
             print(averages)
 
@@ -67,3 +74,6 @@ class GenericInterface(ABC):
     @abstractmethod
     def reward(self) -> float:
         pass
+
+    def get_model(self):
+        return self.model

@@ -10,10 +10,11 @@ import numpy as np
 
 import configparser
 
+import ray
+
 from interface.GenericInterface import GenericInterface
 
 from models.SpotifyModel import SpotifyModel
-
 
 class SpotifyInterface(GenericInterface):
 

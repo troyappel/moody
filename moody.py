@@ -17,24 +17,39 @@ EPISODE_LEN = 3
 my_config = configparser.ConfigParser()
 my_config.read('config.txt')
 
+ray.init()
 
 interfaces = [
-    SpotifyInterface(my_config, INTERVAL),
-    SoundDeviceInterface(my_config, INTERVAL)
+    SpotifyInterface,
+    SoundDeviceInterface
 ]
 
-flatten = lambda l: [item for sublist in l for item in sublist]
+def flatten(l):
+    return [item for sublist in l for item in sublist]
+
+def get_remote(object, function, *args, **kwargs):
+    return ray.get(getattr(object, function).remote())(*args, **kwargs)
+
+
 
 class MoodyEnvLoop(ExternalEnv):
-    def __init__(self, interfaces):
+    def __init__(self, interface_classes, _config, _interval):
         self.stepcount = 0
+
+        interfaces = [ray.remote(interface_class).remote(_config, _interval) for interface_class in interface_classes]
 
         self.interfaces: list [GenericInterface]
         self.interfaces = sorted(interfaces, key=lambda x: type(x).__name__)
 
+        print(ray.get(self.interfaces[0].reward.remote()))
 
-        observation_space = gym.spaces.Tuple(flatten([interface.model.input_space() for interface in self.interfaces]))
-        action_space = gym.spaces.Tuple(flatten([interface.model.output_space() for interface in self.interfaces]))
+        observation_space = gym.spaces.Tuple(flatten(
+            [ray.get(interface.get_model.remote()).input_space() for interface in self.interfaces]
+        ))
+
+        action_space = gym.spaces.Tuple(flatten(
+            [ray.get(interface.get_model.remote()).output_space() for interface in self.interfaces]
+        ))
 
 
         print("making env")
@@ -49,9 +64,9 @@ class MoodyEnvLoop(ExternalEnv):
                 self.interfaces: list[GenericInterface]
 
                 for el in self.interfaces:
-                    self.log_returns(eid, el.reward())
+                    self.log_returns(eid, ray.get(el.reward.remote()))
 
-                obs = flatten([el.get_observation() for el in self.interfaces])
+                obs = flatten([ray.get(el.get_observation.remote()) for el in self.interfaces])
 
                 print(obs)
                 print(self.observation_space.sample())
@@ -64,24 +79,26 @@ class MoodyEnvLoop(ExternalEnv):
                 action_list = list(actions)
 
                 for i in range(0, len(interfaces)):
-                    el = self.interfaces[i]
-                    action = action_list[0:len(el.model.output_space())]
-                    el.action_callback(action)
 
-                    action_list = action_list[len(el.model.output_space()):]
+                    el = self.interfaces[i]
+
+                    model = ray.get(el.get_model.remote())
+
+                    action = action_list[0:len(model.output_space())]
+
+                    el.action_callback.remote(action)
+
+                    action_list = action_list[len(model.output_space()):]
 
                 time.sleep(INTERVAL)
 
 
-ray.init()
 
-config = ppo.DEFAULT_CONFIG.copy()
-
-register_env("moody", lambda _: MoodyEnvLoop(interfaces))
+register_env("moody", lambda _: MoodyEnvLoop(interfaces, my_config, INTERVAL))
 
 config = ppo.DEFAULT_CONFIG.copy()
 config["num_gpus"] = 0
-config["num_workers"] = 1
+config["num_workers"] = 0
 config["eager"] = False
 trainer = ppo.PPOTrainer(config=config, env="moody")
 

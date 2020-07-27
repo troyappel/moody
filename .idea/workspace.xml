@@ -227,12 +227,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/interface/SpotifyInterface.py</url>
-          <line>53</line>
+          <line>54</line>
           <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/interface/GenericInterface.py</url>
-          <line>49</line>
+          <line>56</line>
           <option name="timeStamp" value="10" />
         </line-breakpoint>
       </breakpoints>
