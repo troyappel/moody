@@ -37,7 +37,7 @@ class SpotifyInterface(GenericInterface):
 
         self.config_ids()
 
-        super(SpotifyInterface, self).__init__(config, callback_interval, SpotifyModel(**kwargs))
+        GenericInterface.__init__(self, config, callback_interval, SpotifyModel(**kwargs))
 
     def get_interval_data(self) -> dict:
         cur = self.sp.current_playback()

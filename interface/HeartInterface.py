@@ -81,7 +81,7 @@ class HeartInterface(GenericInterface):
 
         self.events = []
 
-        super(HeartInterface, self).__init__(config, callback_interval, HeartModel(**kwargs))
+        GenericInterface.__init__(self, config, callback_interval, HeartModel(**kwargs))
 
     def init_in_task(self, self_actor):
         self.queryloop = PipeQueryLoop.remote(self_actor)

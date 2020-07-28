@@ -60,12 +60,14 @@ class MoodyEnvLoop(ExternalEnv):
         for interface in self.interfaces:
             interface.init_in_task.remote(interface)
 
+        print("checking if ready")
         ready = False
         while not ready:
             try:
-                ready = all([ray.get(interface.is_ready.remote()) for interface in interfaces])
-            except Exception:
-                pass
+                ready = all([ray.get(interface.is_ready.remote()) for interface in self.interfaces])
+                print(ready)
+            except Exception as e:
+                print(e)
             if not ready:
                 time.sleep(1)
 
