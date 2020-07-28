@@ -17,10 +17,10 @@ class GenericInterface(ABC):
 
     # Dict of {field: iterable or singleton}
     @abstractmethod
-    def get_interval_data(self) -> dict:
+    def get_interval_data(self, self_actor) -> dict:
         pass
 
-    def init_in_task(self) -> None:
+    def init_in_task(self, self_actor) -> None:
         return
 
     # Tuple of values, in key-sorted order

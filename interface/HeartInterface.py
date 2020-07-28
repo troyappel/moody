@@ -25,10 +25,12 @@ class PipeQueryLoop(object):
 
     def run(self):
         while True:
-            print("pipe!")
+            print("running")
+            time.sleep(1)
             try:
+                print("creating file")
                 handle = win32file.CreateFile(
-                    '\\\\.\\pipe\\hrpipetroy',
+                    '\\\\.\\pipe\\hrpipetroy6',
                     win32file.GENERIC_READ | win32file.GENERIC_WRITE,
                     0,
                     None,
@@ -36,12 +38,19 @@ class PipeQueryLoop(object):
                     0,
                     None
                 )
+                print('post create')
                 res = win32pipe.SetNamedPipeHandleState(handle, win32pipe.PIPE_READMODE_BYTE, None, None)
                 if res == 0:
                     print(f"SetNamedPipeHandleState return code: {res}")
                 while True:
+                    time.sleep(0.1)
                     resp = win32file.ReadFile(handle, 64 * 1024)
-                    self.recipient.get_from_pipe.remote(resp)
+
+                    if resp != 0:
+                        break
+
+                    self.recipient.get_from_pipe.remote(resp[1])
+
 
             except pywintypes.error as e:
                 if e.args[0] == 2:
@@ -49,6 +58,13 @@ class PipeQueryLoop(object):
                     time.sleep(1)
                 elif e.args[0] == 109:
                     print("broken pipe, bye bye")
+                else:
+                    print("broken with {}".format(e.args[0]))
+
+
+            except Exception as e:
+                print(e)
+
 
 
 
@@ -60,8 +76,8 @@ class HeartInterface(GenericInterface):
 
         super(HeartInterface, self).__init__(config, callback_interval, HeartModel(**kwargs))
 
-    def init_in_task(self):
-        self.queryloop = PipeQueryLoop.remote(self)
+    def init_in_task(self, self_actor):
+        self.queryloop = PipeQueryLoop.remote(self_actor)
         self.queryloop.run.remote()
 
     def get_interval_data(self):
@@ -77,5 +93,20 @@ class HeartInterface(GenericInterface):
         return 0.0
 
     def get_from_pipe(self, data):
-        print("received it!")
-        print(data)
+        try:
+            hr_offset = 1
+
+            print("received it!")
+            print(data)
+            print(data[hr_offset + 5])
+            print(data[hr_offset + 4])
+            print(data[hr_offset + 7])
+            print(data[hr_offset + 6])
+
+            event_time = (data[hr_offset + 5] << 8) + (data[hr_offset + 4])
+            hr = data[hr_offset + 7]
+            beat_count =data[hr_offset + 6]
+            print("{}, {}, {}".format(event_time, hr, beat_count))
+        except Exception:
+#           pass
+

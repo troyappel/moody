@@ -58,7 +58,7 @@ class MoodyEnvLoop(ExternalEnv):
 
     def run(self):
         for interface in self.interfaces:
-            interface.init_in_task.remote()
+            interface.init_in_task.remote(interface)
         while True:
             eid = self.start_episode()
             for j in range(0, EPISODE_LEN):

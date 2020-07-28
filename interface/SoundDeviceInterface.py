@@ -22,7 +22,7 @@ class SoundDeviceInterface(GenericInterface):
 
         super(SoundDeviceInterface, self).__init__(config, callback_interval, SoundDeviceModel(**kwargs))
 
-    def init_in_task(self):
+    def init_in_task(self, self_actor):
         self.stream = sd.Stream(callback=self.inc_sound)
         self.stream.start()
 
