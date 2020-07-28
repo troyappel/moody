@@ -13,6 +13,8 @@ class GenericInterface(ABC):
         self.callback_interval = callback_interval
         self.model = model
 
+        self.is_ready = False
+
         self.prev_vals = {}
 
     # Dict of {field: iterable or singleton}
@@ -22,6 +24,12 @@ class GenericInterface(ABC):
 
     def init_in_task(self, self_actor) -> None:
         return
+
+    def ready(self) -> None:
+        self.is_ready = True
+
+    def is_ready(self):
+        return self.is_ready
 
     # Tuple of values, in key-sorted order
     def get_observation(self) -> Tuple:

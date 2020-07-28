@@ -45,5 +45,6 @@ class SoundDeviceInterface(GenericInterface):
     def inc_sound(self, indata, outdata, frames, time, status):
         volume_norm = np.linalg.norm(indata) * 10
         self.sound_lst.append(volume_norm)
+        self.ready()
 
 

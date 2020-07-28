@@ -30,7 +30,7 @@ class PipeQueryLoop(object):
             try:
                 print("creating file")
                 handle = win32file.CreateFile(
-                    '\\\\.\\pipe\\hrpipetroy6',
+                    '\\\\.\\pipe\\hrpipetroy7',
                     win32file.GENERIC_READ | win32file.GENERIC_WRITE,
                     0,
                     None,
@@ -72,7 +72,7 @@ class PipeQueryLoop(object):
 class HeartInterface(GenericInterface):
     def __init__(self, config, callback_interval, **kwargs):
 
-        self.queryloop = None
+        self.events = []
 
         super(HeartInterface, self).__init__(config, callback_interval, HeartModel(**kwargs))
 
@@ -81,10 +81,10 @@ class HeartInterface(GenericInterface):
         self.queryloop.run.remote()
 
     def get_interval_data(self):
-        return {"metrics": [0, 0, 0]}
+        return {"metrics": self.events}
 
     def clear_observation(self):
-        pass
+        self.events = []
 
     def action_callback(self, action):
         pass
@@ -98,15 +98,14 @@ class HeartInterface(GenericInterface):
 
             print("received it!")
             print(data)
-            print(data[hr_offset + 5])
-            print(data[hr_offset + 4])
-            print(data[hr_offset + 7])
-            print(data[hr_offset + 6])
 
             event_time = (data[hr_offset + 5] << 8) + (data[hr_offset + 4])
             hr = data[hr_offset + 7]
             beat_count =data[hr_offset + 6]
-            print("{}, {}, {}".format(event_time, hr, beat_count))
+            self.events.append([hr, 0, 0])
+
+            self.ready()
+
         except Exception:
-#           pass
+            pass
 

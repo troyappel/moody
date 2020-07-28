@@ -33,6 +33,8 @@ class SpotifyInterface(GenericInterface):
 
         self.uri_set = set()
 
+        self.ready()
+
         self.config_ids()
 
         super(SpotifyInterface, self).__init__(config, callback_interval, SpotifyModel(**kwargs))

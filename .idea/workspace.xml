@@ -7,6 +7,7 @@
       <change beforePath="$PROJECT_DIR$/interface/GenericInterface.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/GenericInterface.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/interface/HeartInterface.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/HeartInterface.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/interface/SoundDeviceInterface.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/SoundDeviceInterface.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/interface/SpotifyInterface.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/SpotifyInterface.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/moody.py" beforeDir="false" afterPath="$PROJECT_DIR$/moody.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/openant" beforeDir="false" afterPath="$PROJECT_DIR$/openant" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/openant/examples/scan.py" beforeDir="false" afterPath="$PROJECT_DIR$/openant/examples/scan.py" afterDir="false" />
@@ -227,12 +228,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/interface/SpotifyInterface.py</url>
-          <line>54</line>
+          <line>56</line>
           <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/interface/GenericInterface.py</url>
-          <line>53</line>
+          <line>61</line>
           <option name="timeStamp" value="10" />
         </line-breakpoint>
       </breakpoints>
