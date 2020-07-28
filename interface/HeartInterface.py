@@ -6,6 +6,8 @@ from .Averages import Smoother, METHODS
 import numpy as np
 import sounddevice as sd
 
+import threading
+
 import ray
 
 from .GenericInterface import GenericInterface
@@ -15,26 +17,13 @@ import pywintypes
 import win32pipe, win32file
 import time
 
-
-class HeartInterface(GenericInterface):
-    def __init__(self, config, callback_interval, **kwargs):
-        super(HeartInterface, self).__init__(config, callback_interval, HeartModel(**kwargs))
-
-        self.get_packet_loops()
-
-    def get_interval_data(self):
-        return 0
-
-    def clear_observation(self):
+@ray.remote
+class PipeQueryLoop(object):
+    def __init__(self, recipient):
+        self.recipient = recipient
         pass
 
-    def action_callback(self, action):
-        pass
-
-    def reward(self):
-        return 0.0
-
-    def get_packet_loops(self):
+    def run(self):
         while True:
             print("pipe!")
             try:
@@ -52,11 +41,41 @@ class HeartInterface(GenericInterface):
                     print(f"SetNamedPipeHandleState return code: {res}")
                 while True:
                     resp = win32file.ReadFile(handle, 64 * 1024)
-                    print(f"message: {resp}")
+                    self.recipient.get_from_pipe.remote(resp)
+
             except pywintypes.error as e:
                 if e.args[0] == 2:
                     print("no pipe, trying again in a sec")
                     time.sleep(1)
                 elif e.args[0] == 109:
                     print("broken pipe, bye bye")
-                    quit = True
+
+
+
+
+class HeartInterface(GenericInterface):
+    def __init__(self, config, callback_interval, **kwargs):
+
+        self.queryloop = None
+
+        super(HeartInterface, self).__init__(config, callback_interval, HeartModel(**kwargs))
+
+    def init_in_task(self):
+        self.queryloop = PipeQueryLoop.remote(self)
+        self.queryloop.run.remote()
+
+    def get_interval_data(self):
+        return {"metrics": [0, 0, 0]}
+
+    def clear_observation(self):
+        pass
+
+    def action_callback(self, action):
+        pass
+
+    def reward(self):
+        return 0.0
+
+    def get_from_pipe(self, data):
+        print("received it!")
+        print(data)

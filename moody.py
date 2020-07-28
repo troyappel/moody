@@ -1,5 +1,6 @@
 from interface.SpotifyInterface import SpotifyInterface
 from interface.SoundDeviceInterface import SoundDeviceInterface
+from interface.HeartInterface import HeartInterface
 import configparser
 from ray.rllib.env.external_env import ExternalEnv
 from ray.tune.registry import register_env
@@ -21,7 +22,8 @@ ray.init()
 
 interfaces = [
     SpotifyInterface,
-    SoundDeviceInterface
+    # SoundDeviceInterface,
+    HeartInterface
 ]
 
 def flatten(l):
@@ -52,39 +54,26 @@ class MoodyEnvLoop(ExternalEnv):
         ))
 
 
-        print("making env")
         super(MoodyEnvLoop, self).__init__(action_space, observation_space)
-        print("made env loop")
 
     def run(self):
-        print("running")
         for interface in self.interfaces:
-            ray.get(interface.init_in_task.remote())
+            interface.init_in_task.remote()
         while True:
             eid = self.start_episode()
             for j in range(0, EPISODE_LEN):
                 self.interfaces: list[GenericInterface]
 
-                print("returns")
 
                 for el in self.interfaces:
                     self.log_returns(eid, ray.get(el.reward.remote()))
 
-                print("obs")
-
                 obs = flatten([ray.get(el.get_observation.remote()) for el in self.interfaces])
-
-                print(obs)
-                print(self.observation_space.sample())
 
                 actions = self.get_action(eid, obs)
 
-                print(actions)
-                print(self.action_space.sample())
-
                 action_list = list(actions)
 
-                print("act")
 
                 for i in range(0, len(interfaces)):
 

@@ -41,8 +41,6 @@ class GenericInterface(ABC):
             else:
                 averages = v
 
-            print(averages)
-
 
             # Array might be 0-dimensional -- gym space expects an array or list for Box
             if isinstance(averages, np.ndarray):
@@ -53,20 +51,9 @@ class GenericInterface(ABC):
             # if isinstance(averages, float):
             #     averages = [float(averages)]
 
-            print(data)
-            print(averages)
-            print(self.model.input_fields[k][1])
-            print(type(averages))
-
-            print(self.model.input_fields[k][1].contains(averages))
-
-            print("data!")
-
             assert self.model.input_fields[k][1].contains(averages)
 
             res_list.append(averages)
-
-        print("returning!")
 
         return tuple(res_list)
 
