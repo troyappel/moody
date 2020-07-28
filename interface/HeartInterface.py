@@ -24,13 +24,14 @@ class PipeQueryLoop(object):
         pass
 
     def run(self):
+        print("you should see this ONCE!")
         while True:
             print("running")
             time.sleep(1)
             try:
                 print("creating file")
                 handle = win32file.CreateFile(
-                    '\\\\.\\pipe\\hrpipetroy7',
+                    '\\\\.\\pipe\\hrpipetroy20',
                     win32file.GENERIC_READ | win32file.GENERIC_WRITE,
                     0,
                     None,
@@ -40,16 +41,21 @@ class PipeQueryLoop(object):
                 )
                 print('post create')
                 res = win32pipe.SetNamedPipeHandleState(handle, win32pipe.PIPE_READMODE_BYTE, None, None)
+                print("post modern")
                 if res == 0:
                     print(f"SetNamedPipeHandleState return code: {res}")
                 while True:
-                    time.sleep(0.1)
-                    resp = win32file.ReadFile(handle, 64 * 1024)
+                    try:
+                        time.sleep(0.1)
+                        resp = win32file.ReadFile(handle, 64 * 1024)
 
-                    if resp != 0:
-                        break
+                        if resp[0] != 0:
+                            print(resp)
+                            break
 
-                    self.recipient.get_from_pipe.remote(resp[1])
+                        self.recipient.get_from_pipe.remote(resp[1])
+                    except Exception:
+                        pass
 
 
             except pywintypes.error as e:
@@ -59,6 +65,7 @@ class PipeQueryLoop(object):
                 elif e.args[0] == 109:
                     print("broken pipe, bye bye")
                 else:
+                    print(e.args)
                     print("broken with {}".format(e.args[0]))
 
 
@@ -95,9 +102,6 @@ class HeartInterface(GenericInterface):
     def get_from_pipe(self, data):
         try:
             hr_offset = 1
-
-            print("received it!")
-            print(data)
 
             event_time = (data[hr_offset + 5] << 8) + (data[hr_offset + 4])
             hr = data[hr_offset + 7]
