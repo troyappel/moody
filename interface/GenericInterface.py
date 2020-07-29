@@ -26,6 +26,8 @@ class GenericInterface(ABC):
         return
 
     def ready(self) -> None:
+        if not self.is_ready:
+            print(self.__class__, " ready!")
         self.is_ready = True
 
     def is_ready(self):

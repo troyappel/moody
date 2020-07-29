@@ -24,14 +24,12 @@ class PipeQueryLoop(object):
         pass
 
     def run(self):
-        print("you should see this ONCE!")
         while True:
-            print("running")
+            print("Checking for pipe")
             time.sleep(1)
             try:
-                print("creating file")
                 handle = win32file.CreateFile(
-                    '\\\\.\\pipe\\hrpipetroy20',
+                    '\\\\.\\pipe\\hrpipetroy22',
                     win32file.GENERIC_READ | win32file.GENERIC_WRITE,
                     0,
                     None,
@@ -39,9 +37,8 @@ class PipeQueryLoop(object):
                     0,
                     None
                 )
-                print('post create')
                 res = win32pipe.SetNamedPipeHandleState(handle, win32pipe.PIPE_READMODE_BYTE, None, None)
-                print("post modern")
+                print("Pipe created successfully")
                 if res == 0:
                     print(f"SetNamedPipeHandleState return code: {res}")
                 while True:
@@ -88,7 +85,7 @@ class HeartInterface(GenericInterface):
         self.queryloop.run.remote()
 
     def get_interval_data(self):
-        return {"metrics": self.events}
+        return {"metrics": np.array(self.events, dtype=np.float16)}
 
     def clear_observation(self):
         self.events = []
@@ -97,11 +94,11 @@ class HeartInterface(GenericInterface):
         pass
 
     def reward(self):
-        return 0.0
+        return 255 - self.get_observation()[0][0]
 
     def get_from_pipe(self, data):
         try:
-            hr_offset = 1
+            hr_offset = 0
 
             event_time = (data[hr_offset + 5] << 8) + (data[hr_offset + 4])
             hr = data[hr_offset + 7]
@@ -110,6 +107,6 @@ class HeartInterface(GenericInterface):
 
             self.ready()
 
-        except Exception:
-            pass
+        except Exception as e:
+            print(e)
 

@@ -33,11 +33,15 @@ class SpotifyInterface(GenericInterface):
 
         self.uri_set = set()
 
-        self.ready()
 
         self.config_ids()
 
         GenericInterface.__init__(self, config, callback_interval, SpotifyModel(**kwargs))
+
+    # Calls to super should be here!
+    def init_in_task(self, self_actor) -> None:
+        print("spotify ready!")
+        self.ready()
 
     def get_interval_data(self) -> dict:
         cur = self.sp.current_playback()
@@ -152,6 +156,7 @@ class SpotifyInterface(GenericInterface):
             self.seek_song(uri)
 
     def play_similar(self, target_attrs, mode, now=True):
+        print('adding song to queue')
         recs = self.sp.recommendations(
             seed_artists=self.config['SeedArtists'].values(),
             seed_genres=self.config['SeedArtists'].keys(),
@@ -182,4 +187,6 @@ class SpotifyInterface(GenericInterface):
 
         to_end = playback['item']['duration_ms'] - playback['progress_ms']
 
-        return to_end * 1000 > self.callback_interval
+        print(to_end)
+
+        return to_end * 1000 < self.callback_interval

@@ -13,7 +13,7 @@ from ray.rllib.agents import ppo
 from interface.GenericInterface import GenericInterface
 
 INTERVAL = 5
-EPISODE_LEN = 3
+EPISODE_LEN = 20
 
 my_config = configparser.ConfigParser()
 my_config.read('config.txt')
@@ -43,8 +43,6 @@ class MoodyEnvLoop(ExternalEnv):
         self.interfaces: list [GenericInterface]
         self.interfaces = sorted(interfaces, key=lambda x: type(x).__name__)
 
-        print(ray.get(self.interfaces[0].reward.remote()))
-
         observation_space = gym.spaces.Tuple(flatten(
             [ray.get(interface.get_model.remote()).input_space() for interface in self.interfaces]
         ))
@@ -60,7 +58,6 @@ class MoodyEnvLoop(ExternalEnv):
         for interface in self.interfaces:
             interface.init_in_task.remote(interface)
 
-        print("checking if ready")
         ready = False
         while not ready:
             try:
@@ -75,13 +72,16 @@ class MoodyEnvLoop(ExternalEnv):
 
 
         while True:
+            obs = None
             eid = self.start_episode()
             for j in range(0, EPISODE_LEN):
                 self.interfaces: list[GenericInterface]
 
-
+                print("Logging returns")
                 for el in self.interfaces:
                     self.log_returns(eid, ray.get(el.reward.remote()))
+
+
 
                 obs = flatten([ray.get(el.get_observation.remote()) for el in self.interfaces])
 
@@ -104,6 +104,8 @@ class MoodyEnvLoop(ExternalEnv):
 
                 time.sleep(INTERVAL)
 
+            self.end_episode(eid, obs)
+
 
 
 register_env("moody", lambda _: MoodyEnvLoop(interfaces, my_config, INTERVAL))
@@ -114,11 +116,11 @@ config["num_workers"] = 0
 config["eager"] = False
 trainer = ppo.PPOTrainer(config=config, env="moody")
 
-print("here")
+print("Beginning training.")
 
 for i in range(0, 100):
-    print("oogaboogho")
     print(i)
     result = trainer.train()
     print("Iteration {}, reward {}, timesteps {}".format(
         i, result["episode_reward_mean"], result["timesteps_total"]))
+    trainer.save()
