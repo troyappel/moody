@@ -48,12 +48,15 @@ class MoodyEnvLoop(ExternalEnv):
         low_in = flatten([ray.get(interface.get_model.remote()).input_space()[0] for interface in self.interfaces])
         high_in = flatten([ray.get(interface.get_model.remote()).input_space()[1] for interface in self.interfaces])
 
-        observation_space = gym.spaces.Box(low=np.array(low_in), high=np.array(high_in), dtype=np.float16)
+        print([ray.get(interface.get_model.remote()).input_space()[0] for interface in self.interfaces])
+        observation_space = gym.spaces.Box(
+            low=np.array(low_in, dtype=np.float16), high=np.array(high_in, dtype=np.float16), dtype=np.float16)
 
         low_out = flatten([ray.get(interface.get_model.remote()).output_space()[0] for interface in self.interfaces])
         high_out = flatten([ray.get(interface.get_model.remote()).output_space()[1] for interface in self.interfaces])
 
-        action_space = gym.spaces.Box(low=np.array(low_out), high=np.array(high_out), dtype=np.float16)
+        action_space = gym.spaces.Box(
+            low=np.array(low_out, dtype=np.float16), high=np.array(high_out, dtype=np.float16), dtype=np.float16)
 
         super(MoodyEnvLoop, self).__init__(action_space, observation_space)
 
@@ -65,11 +68,11 @@ class MoodyEnvLoop(ExternalEnv):
         while not ready:
             try:
                 ready = all([ray.get(interface.is_ready.remote()) for interface in self.interfaces])
-                print(ready)
+                print("Ready: ", ready)
             except Exception as e:
                 print(e)
             if not ready:
-                time.sleep(1)
+                time.sleep(5)
 
         print("ready!")
 

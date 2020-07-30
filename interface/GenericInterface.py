@@ -5,6 +5,8 @@ from enum import Enum, auto
 from .Averages import Smoother, METHODS
 import numpy as np
 
+def flatten(l):
+    return [item for sublist in l for item in sublist]
 
 class GenericInterface(ABC):
 
@@ -34,19 +36,19 @@ class GenericInterface(ABC):
         return self.is_ready
 
     # Tuple of values, in key-sorted order
-    def get_observation(self) -> Tuple:
+    def get_observation(self) -> list:
         data = self.get_interval_data()
 
         res_list = []
 
-        for k in sorted(data):
-            v = np.array(data[k], dtype=np.float16)
+        for k, v in data.items():
+            v_arr = np.array(v, dtype=np.float16)
 
-            # averages = None
+            averages = None
             #
-            if v.ndim > 0:
+            if v_arr.ndim > 0:
                 averages = np.apply_along_axis(self.model.smoothers[k].evaluate, 0, v)
-            elif v.ndim == 0:
+            elif v_arr.ndim == 0:
                 averages = self.model.smoothers[k].evaluate(v)
             # else:
             #     averages = v
@@ -63,12 +65,11 @@ class GenericInterface(ABC):
 
             # assert self.model.input_fields[k][1].contains(averages)
 
-            res_list.append(v)
+            res_list.append(list(averages))
 
-        flat_list = []
-        map(flat_list.extend, res_list)
+        return flatten(res_list)
 
-        return flat_list
+        # return np.array(flatten(res_list), dtype=np.float16)
 
     # Order of calls:
     # get_interval_data -> action_callback -> reward -> clear_observation

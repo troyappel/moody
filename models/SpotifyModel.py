@@ -11,14 +11,14 @@ class SpotifyModel(GenericModel):
     input_fields = {
         'attributes': (
             Averages.Smoother(Averages.METHODS.PASS),
-            [0, 0, 0, 0, 0, -60, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, -60, 0, 0, 0, 0, 0],
             [1, 1, 1, 1, 1, 0, 1, 1, 255, 100, 1]
         )
     }
 
-    input_fields = {
+    output_fields = {
         'attributes': (
-            [0, 0, 0, 0, 0, -60, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, -60, 0, 0, 0, 0, 0],
             [1, 1, 1, 1, 1, 0, 1, 1, 255, 100, 1]
         )
     }

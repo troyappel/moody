@@ -96,7 +96,8 @@ class HeartInterface(GenericInterface):
         pass
 
     def reward(self):
-        return 255 - self.get_observation()[0][0]
+        print(self.get_observation())
+        return 255 - self.get_observation()[0]
 
     def get_from_pipe(self, data):
         try:

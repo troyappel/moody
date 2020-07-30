@@ -4,6 +4,9 @@ from abc import ABC, abstractmethod
 
 from interface import Averages
 
+def flatten(l):
+    return [item for sublist in l for item in sublist]
+
 
 class GenericModel(ABC):
 
@@ -17,7 +20,7 @@ class GenericModel(ABC):
         # Type hint
         default_smoother: Averages.Smoother
         for field, tup in self.input_fields.items():
-            default_smoother, space = tup
+            default_smoother, _, _ = tup
             if field in kwargs.keys():
                 self.smoothers[field] = kwargs[field]
             elif default_smoother is not None:
@@ -48,7 +51,7 @@ class GenericModel(ABC):
             if self.smoothers[k] is not None
         ]
 
-        return space_list_bottom, space_list_top
+        return flatten(space_list_bottom), flatten(space_list_top)
 
     def output_space(self) -> gym.spaces.space:
         space_list_bottom = [
@@ -60,7 +63,7 @@ class GenericModel(ABC):
             v[1] for k, v in self.output_fields.items()
             if self.smoothers[k] is not None
         ]
-        return space_list_bottom, space_list_top
+        return flatten(space_list_bottom), flatten(space_list_top)
 
     def values_list_to_dict(self, values_list, in_space) -> dict:
         ret_dict = {}
