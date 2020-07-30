@@ -103,7 +103,7 @@ class MoodyEnvLoop(ExternalEnv):
 
                     action = action_list[0:len(model.output_space()[0])]
 
-                    action_dict = el.values_list_to_dict.remote(action)
+                    action_dict = model.values_list_to_dict(action, False)
 
                     el.action_callback.remote(action_dict)
 
@@ -123,7 +123,6 @@ config["num_workers"] = 0
 config["eager"] = True
 config["timesteps_per_iteration"] = 20
 config["learning_starts"] = 60
-config["framework"] = "torch"
 
 # Required to prevent rllib from thinking we subclass gym env
 config["normalize_actions"] = False

@@ -31,6 +31,8 @@ class SpotifyInterface(GenericInterface):
             username=config['SPOTIFY']['USERNAME']
         ))
 
+        print()
+
         self.uri_set = set()
 
         self.cum_reward = 0
@@ -88,7 +90,6 @@ class SpotifyInterface(GenericInterface):
         # Pause means bad song
         if not cur or not cur['is_playing']:
             self.cum_reward -= 100
-            self.sp.start_playback()
             play_now = True
         elif not self.new_song_needed():
             return
@@ -161,7 +162,7 @@ class SpotifyInterface(GenericInterface):
         print('adding song to queue')
         recs = self.sp.recommendations(
             seed_artists=self.config['SeedArtists'].values(),
-            seed_genres=self.config['SeedArtists'].keys(),
+            seed_genres=self.config['SeedGenres'].keys(),
             seed_tracks=self.config['SeedTracks'].values(),
             target_acousticness=target_attrs[0],
             target_danceability=target_attrs[1],
@@ -171,7 +172,7 @@ class SpotifyInterface(GenericInterface):
             target_speechiness=target_attrs[5],
             target_valence=target_attrs[6],
             target_tempo=target_attrs[7],
-            target_mode=target_attrs[9]
+            target_mode=round(target_attrs[10])
         )
 
         for track in recs['tracks']:
