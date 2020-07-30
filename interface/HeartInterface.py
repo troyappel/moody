@@ -85,7 +85,9 @@ class HeartInterface(GenericInterface):
         self.queryloop.run.remote()
 
     def get_interval_data(self):
-        return {"metrics": np.array(self.events, dtype=np.float16)}
+        return {
+            "metrics": self.events
+        }
 
     def clear_observation(self):
         self.events = []

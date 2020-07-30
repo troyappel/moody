@@ -38,15 +38,43 @@ class GenericModel(ABC):
         raise NotImplementedError
 
     def input_space(self) -> gym.spaces.space:
-        space_list = [
+        space_list_bottom = [
             v[1] for k, v in self.input_fields.items()
             if self.smoothers[k] is not None
         ]
-        return space_list
+
+        space_list_top = [
+            v[2] for k, v in self.input_fields.items()
+            if self.smoothers[k] is not None
+        ]
+
+        return space_list_bottom, space_list_top
 
     def output_space(self) -> gym.spaces.space:
-        space_list = [v for _, v in self.output_fields.items() if v is not None]
-        return space_list
+        space_list_bottom = [
+            v[0] for k, v in self.output_fields.items()
+            if self.smoothers[k] is not None
+        ]
+
+        space_list_top = [
+            v[1] for k, v in self.output_fields.items()
+            if self.smoothers[k] is not None
+        ]
+        return space_list_bottom, space_list_top
+
+    def values_list_to_dict(self, values_list, in_space) -> dict:
+        ret_dict = {}
+        if input:
+            for k, v in self.input_fields.items():
+                ret_dict[k] = values_list[:len(v[1])]
+                values_list = values_list[len(v[1]):]
+
+        else:
+            for k, v in self.output_fields.items():
+                ret_dict[k] = values_list[:len(v[0])]
+                values_list = values_list[len(v[0]):]
+
+        return ret_dict
 
     # Data is shaped like maximal version of fields
     def get_repr(self, data):

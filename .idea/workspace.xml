@@ -7,10 +7,14 @@
       <change beforePath="$PROJECT_DIR$/interface/GenericInterface.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/GenericInterface.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/interface/HeartInterface.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/HeartInterface.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/interface/SpotifyInterface.py" beforeDir="false" afterPath="$PROJECT_DIR$/interface/SpotifyInterface.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/GenericModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/GenericModel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/HeartModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/HeartModel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/SpotifyModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/models/SpotifyModel.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/moody.py" beforeDir="false" afterPath="$PROJECT_DIR$/moody.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/openant" beforeDir="false" afterPath="$PROJECT_DIR$/openant" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/openant/examples/scan.py" beforeDir="false" afterPath="$PROJECT_DIR$/openant/examples/scan.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/openant/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/openant/setup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -227,7 +231,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/interface/SpotifyInterface.py</url>
-          <line>60</line>
+          <line>62</line>
           <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">

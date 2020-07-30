@@ -19,7 +19,7 @@ class GenericInterface(ABC):
 
     # Dict of {field: iterable or singleton}
     @abstractmethod
-    def get_interval_data(self, self_actor) -> dict:
+    def get_interval_data(self, self_actor) -> list:
         pass
 
     def init_in_task(self, self_actor) -> None:
@@ -40,32 +40,35 @@ class GenericInterface(ABC):
         res_list = []
 
         for k in sorted(data):
-            v = data[k]
+            v = np.array(data[k], dtype=np.float16)
 
-            averages = None
-
-            if isinstance(v, np.ndarray) and v.ndim > 0:
+            # averages = None
+            #
+            if v.ndim > 0:
                 averages = np.apply_along_axis(self.model.smoothers[k].evaluate, 0, v)
-            elif isinstance(v, np.ndarray) and v.ndim == 0:
+            elif v.ndim == 0:
                 averages = self.model.smoothers[k].evaluate(v)
-            else:
-                averages = v
+            # else:
+            #     averages = v
 
 
-            # Array might be 0-dimensional -- gym space expects an array or list for Box
-            if isinstance(averages, np.ndarray):
-                if isinstance(self.model.input_fields[k][1], gym.spaces.Box):
-                    if averages.size == 1:
-                        averages = averages.reshape(1)
+            # # Array might be 0-dimensional -- gym space expects an array or list for Box
+            # if isinstance(v, np.ndarray):
+            #     if isinstance(self.model.input_fields[k][1], gym.spaces.Box):
+            #         if v.size == 1:
+            #             averages = v.reshape(1)
 
             # if isinstance(averages, float):
             #     averages = [float(averages)]
 
-            assert self.model.input_fields[k][1].contains(averages)
+            # assert self.model.input_fields[k][1].contains(averages)
 
-            res_list.append(averages)
+            res_list.append(v)
 
-        return tuple(res_list)
+        flat_list = []
+        map(flat_list.extend, res_list)
+
+        return flat_list
 
     # Order of calls:
     # get_interval_data -> action_callback -> reward -> clear_observation

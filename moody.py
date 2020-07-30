@@ -4,11 +4,13 @@ from interface.HeartInterface import HeartInterface
 import configparser
 from ray.rllib.env.external_env import ExternalEnv
 from ray.tune.registry import register_env
-from ray.rllib.agents.dqn import DQNTrainer
+from ray.rllib.agents import sac
 import time
 import gym
 import ray
 from ray.rllib.agents import ppo
+
+import numpy as np
 
 from interface.GenericInterface import GenericInterface
 
@@ -43,14 +45,15 @@ class MoodyEnvLoop(ExternalEnv):
         self.interfaces: list [GenericInterface]
         self.interfaces = sorted(interfaces, key=lambda x: type(x).__name__)
 
-        observation_space = gym.spaces.Tuple(flatten(
-            [ray.get(interface.get_model.remote()).input_space() for interface in self.interfaces]
-        ))
+        low_in = flatten([ray.get(interface.get_model.remote()).input_space()[0] for interface in self.interfaces])
+        high_in = flatten([ray.get(interface.get_model.remote()).input_space()[1] for interface in self.interfaces])
 
-        action_space = gym.spaces.Tuple(flatten(
-            [ray.get(interface.get_model.remote()).output_space() for interface in self.interfaces]
-        ))
+        observation_space = gym.spaces.Box(low=np.array(low_in), high=np.array(high_in), dtype=np.float16)
 
+        low_out = flatten([ray.get(interface.get_model.remote()).output_space()[0] for interface in self.interfaces])
+        high_out = flatten([ray.get(interface.get_model.remote()).output_space()[1] for interface in self.interfaces])
+
+        action_space = gym.spaces.Box(low=np.array(low_out), high=np.array(high_out), dtype=np.float16)
 
         super(MoodyEnvLoop, self).__init__(action_space, observation_space)
 
@@ -77,11 +80,10 @@ class MoodyEnvLoop(ExternalEnv):
             for j in range(0, EPISODE_LEN):
                 self.interfaces: list[GenericInterface]
 
-                print("Logging returns")
                 for el in self.interfaces:
                     self.log_returns(eid, ray.get(el.reward.remote()))
 
-
+                print("taking observation")
 
                 obs = flatten([ray.get(el.get_observation.remote()) for el in self.interfaces])
 
@@ -96,11 +98,13 @@ class MoodyEnvLoop(ExternalEnv):
 
                     model = ray.get(el.get_model.remote())
 
-                    action = action_list[0:len(model.output_space())]
+                    action = action_list[0:len(model.output_space()[0])]
 
-                    el.action_callback.remote(action)
+                    action_dict = el.values_list_to_dict.remote(action)
 
-                    action_list = action_list[len(model.output_space()):]
+                    el.action_callback.remote(action_dict)
+
+                    action_list = action_list[len(model.output_space()[0]):]
 
                 time.sleep(INTERVAL)
 
@@ -110,11 +114,18 @@ class MoodyEnvLoop(ExternalEnv):
 
 register_env("moody", lambda _: MoodyEnvLoop(interfaces, my_config, INTERVAL))
 
-config = ppo.DEFAULT_CONFIG.copy()
+config = sac.DEFAULT_CONFIG.copy()
 config["num_gpus"] = 0
 config["num_workers"] = 0
-config["eager"] = False
-trainer = ppo.PPOTrainer(config=config, env="moody")
+config["eager"] = True
+config["timesteps_per_iteration"] = 20
+config["learning_starts"] = 60
+config["framework"] = "torch"
+
+# Required to prevent rllib from thinking we subclass gym env
+config["normalize_actions"] = False
+
+trainer = sac.SACTrainer(config=config, env="moody")
 
 print("Beginning training.")
 

@@ -33,7 +33,9 @@ class SpotifyInterface(GenericInterface):
 
         self.uri_set = set()
 
+        self.cum_reward = 0
 
+        print('config ids!')
         self.config_ids()
 
         GenericInterface.__init__(self, config, callback_interval, SpotifyModel(**kwargs))
@@ -68,14 +70,12 @@ class SpotifyInterface(GenericInterface):
             float(trackinfo['speechiness']),
             float(trackinfo['valence']),
             float(trackinfo['tempo']),
-            volume
+            volume,
+            trackinfo['mode']
         ])
-
-        mode = trackinfo['mode']
 
         return {
             'attributes': attrs,
-            'mode': mode
         }
 
 
@@ -85,22 +85,24 @@ class SpotifyInterface(GenericInterface):
 
         play_now = False
 
+        # Pause means bad song
         if not cur or not cur['is_playing']:
+            self.cum_reward -= 100
             self.sp.start_playback()
             play_now = True
-
-        if not self.new_song_needed():
+        elif not self.new_song_needed():
             return
 
-        attrs, mode = action
+        attrs = action['attributes']
 
-        self.play_similar(list(attrs), mode, play_now)
+        self.play_similar(list(attrs), play_now)
 
     def clear_observation(self):
+        self.cum_reward = 0
         return
 
     def reward(self):
-        return 0
+        return self.cum_reward
 
     # Custom functions
     def config_ids(self):
@@ -155,7 +157,7 @@ class SpotifyInterface(GenericInterface):
         if now:
             self.seek_song(uri)
 
-    def play_similar(self, target_attrs, mode, now=True):
+    def play_similar(self, target_attrs, now=True):
         print('adding song to queue')
         recs = self.sp.recommendations(
             seed_artists=self.config['SeedArtists'].values(),
@@ -169,7 +171,7 @@ class SpotifyInterface(GenericInterface):
             target_speechiness=target_attrs[5],
             target_valence=target_attrs[6],
             target_tempo=target_attrs[7],
-            target_mode=mode
+            target_mode=target_attrs[9]
         )
 
         for track in recs['tracks']:
@@ -187,6 +189,4 @@ class SpotifyInterface(GenericInterface):
 
         to_end = playback['item']['duration_ms'] - playback['progress_ms']
 
-        print(to_end)
-
-        return to_end * 1000 < self.callback_interval
+        return to_end < self.callback_interval * 1000

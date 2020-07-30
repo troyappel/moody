@@ -9,23 +9,17 @@ class SpotifyModel(GenericModel):
         super(SpotifyModel, self).__init__(**kwargs)
 
     input_fields = {
-        "attributes": (
+        'attributes': (
             Averages.Smoother(Averages.METHODS.PASS),
-            gym.spaces.Box(low=np.array([0, 0, 0, 0, 0, -60, 0, 0, 0, 0], dtype=np.float16),
-                           high=np.array([1, 1, 1, 1, 1, 0, 1, 1, 255, 100], dtype=np.float16),
-                           dtype=np.float16)
-        ),
-        "mode": (
-            Averages.Smoother(Averages.METHODS.PASS),
-            gym.spaces.Discrete(2)
+            [0, 0, 0, 0, 0, -60, 0, 0, 0, 0],
+            [1, 1, 1, 1, 1, 0, 1, 1, 255, 100, 1]
         )
     }
 
-    output_fields = {
-        "attributes":
-            gym.spaces.Box(low=np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 50], dtype=np.float16),
-                           high=np.array([1, 1, 1, 1, 1, 1, 1, 1, 255, 100], dtype=np.float16),
-                           dtype=np.float16),
-        "mode":
-            gym.spaces.Discrete(2)
+    input_fields = {
+        'attributes': (
+            [0, 0, 0, 0, 0, -60, 0, 0, 0, 0],
+            [1, 1, 1, 1, 1, 0, 1, 1, 255, 100, 1]
+        )
     }
+

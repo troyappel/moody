@@ -16,6 +16,6 @@ class HeartModel(GenericModel):
                            high=np.array([255, 255, 255], dtype=np.float16),
                            dtype=np.float16)
         )
-}
+    }
 
     output_fields = {}
