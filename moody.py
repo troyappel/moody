@@ -88,9 +88,15 @@ class MoodyEnvLoop(ExternalEnv):
                     print(reward)
                     self.log_returns(eid, ray.get(el.reward.remote()))
 
+                for el in self.interfaces:
+                    ray.get(el.clear_reward.remote())
+
                 print("taking observation")
 
                 obs = flatten([ray.get(el.get_observation.remote()) for el in self.interfaces])
+
+                for el in self.interfaces:
+                    ray.get(el.clear_observation.remote())
 
                 actions = self.get_action(eid, obs)
 
@@ -112,7 +118,7 @@ class MoodyEnvLoop(ExternalEnv):
                     action_list = action_list[len(model.output_space()[0]):]
 
                 for el in self.interfaces:
-                    ray.get(el.clear_observation.remote())
+                    ray.get(el.clear_callback.remote())
 
                 time.sleep(INTERVAL)
 

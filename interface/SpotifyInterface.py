@@ -37,6 +37,8 @@ class SpotifyInterface(GenericInterface):
 
         self.cum_reward = 0
 
+        self.SET_SIZE = 200
+
         print('config ids!')
         self.config_ids()
 
@@ -98,12 +100,11 @@ class SpotifyInterface(GenericInterface):
 
         self.play_similar(list(attrs), play_now)
 
-    def clear_observation(self):
-        self.cum_reward = 0
-        return
-
     def reward(self):
         return self.cum_reward
+
+    def clear_reward(self):
+        self.cum_reward = 0
 
     # Custom functions
     def config_ids(self):
@@ -150,8 +151,11 @@ class SpotifyInterface(GenericInterface):
                 self.sp.next_track()
 
     def play_song(self, uri, now=True):
-        if not self.sp.currently_playing()['is_playing']:
-            self.sp.start_playback()
+        while not self.sp.currently_playing()['is_playing']:
+            try:
+                self.sp.start_playback()
+            except spotipy.SpotifyException:
+                continue
 
         self.sp.add_to_queue(uri)
 
@@ -181,6 +185,8 @@ class SpotifyInterface(GenericInterface):
             else:
                 self.play_song(track['uri'], now=now)
                 self.uri_set.add(track['uri'])
+                if len(self.uri_set) > self.SET_SIZE:
+                    self.uri_set.pop()
                 break
         else:
             raise Exception()

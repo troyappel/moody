@@ -74,9 +74,14 @@ class GenericInterface(ABC):
     # Order of calls:
     # get_interval_data -> action_callback -> reward -> clear_observation
 
-    @abstractmethod
     def clear_observation(self) -> None:
-        pass
+        return
+
+    def clear_reward(self) -> None:
+        return
+
+    def clear_callback(self) -> None:
+        return
 
     @abstractmethod
     def action_callback(self, action) -> None:
