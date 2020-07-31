@@ -84,6 +84,8 @@ class MoodyEnvLoop(ExternalEnv):
                 self.interfaces: list[GenericInterface]
 
                 for el in self.interfaces:
+                    reward = ray.get(el.reward.remote())
+                    print(reward)
                     self.log_returns(eid, ray.get(el.reward.remote()))
 
                 print("taking observation")
@@ -109,6 +111,9 @@ class MoodyEnvLoop(ExternalEnv):
 
                     action_list = action_list[len(model.output_space()[0]):]
 
+                for el in self.interfaces:
+                    ray.get(el.clear_observation.remote())
+
                 time.sleep(INTERVAL)
 
             self.end_episode(eid, obs)
@@ -120,9 +125,10 @@ register_env("moody", lambda _: MoodyEnvLoop(interfaces, my_config, INTERVAL))
 config = sac.DEFAULT_CONFIG.copy()
 config["num_gpus"] = 0
 config["num_workers"] = 0
-config["eager"] = True
+config["eager"] = False
 config["timesteps_per_iteration"] = 20
 config["learning_starts"] = 60
+config['use_state_preprocessor'] = True
 
 # Required to prevent rllib from thinking we subclass gym env
 config["normalize_actions"] = False

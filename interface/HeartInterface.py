@@ -44,7 +44,7 @@ class PipeQueryLoop(object):
                 while True:
                     try:
                         time.sleep(0.1)
-                        resp = win32file.ReadFile(handle, 64 * 1024)
+                        resp = win32file.ReadFile(handle, 8)
 
                         if resp[0] != 0:
                             print(resp)
